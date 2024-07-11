@@ -136,6 +136,7 @@ function CheckoutPage() {
                 id={item.id}
                 title={item.title}
                 price={item.price}
+               discount={item.discount}
                 image={item.images[0]}
                 qty={item.qty}
                 checkout={true}

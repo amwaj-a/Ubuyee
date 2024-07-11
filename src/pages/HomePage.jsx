@@ -1,53 +1,45 @@
-import React from 'react';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Nav from '../componenet/Nav';
-import Footer from '../componenet/Footer';
-// import { useRef } from "react";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch } from 'react-redux';
-import { fetchCart } from '../features/cartSlice';
+import React from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Nav from "../componenet/Nav";
+import Footer from "../componenet/Footer";
+import { useRef } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { fetchCart } from "../features/cartSlice";
 
 function HomePage() {
   const [category, setcategory] = React.useState([]);
   const [product, setproduct] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [searchInput, setsearchInput] = useState('');
+  const [searchInput, setsearchInput] = useState("");
   const [visibleCount, setVisibleCount] = useState(10);
   const ITEMS_TO_LOAD = 10;
   const [userData, setUserData] = useState([]);
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
   const dispatch = useDispatch();
   const [isCategory, setisCategory] = useState(false);
+  const myRef = useRef(null);
 
   useEffect(() => {
     axios
-      .get('https://668a90262c68eaf3211d2977.mockapi.io/products')
-      .then((res) => {
+      .get("https://668a90262c68eaf3211d2977.mockapi.io/products")
+      .then((response) => {
+        // handle success
         let array = [];
-        res.data.filter((res) => {
+        response.data.filter((response) => {
           if (array.length == 0) {
-            array.push(res.category);
-          } else if (array.find((e) => e.id == res.category.id)) {
+            array.push(response.category);
+          } else if (array.find((e) => e.id == response.category.id)) {
             return false;
           } else {
-            array.push(res.category);
+            array.push(response.category);
           }
 
           setcategory(array);
         });
-        // console.log(a)
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get('https://668a90262c68eaf3211d2977.mockapi.io/products')
-      .then((response) => {
-        // handle success
-
         setproduct(response.data);
         setFilteredData(response.data);
       })
@@ -75,7 +67,7 @@ function HomePage() {
       });
   }
   const searchFilterData = () => {
-    if (searchInput === '') {
+    if (searchInput === "") {
       setFilteredData(product);
     } else {
       const filtered = product.filter((product) =>
@@ -120,12 +112,12 @@ function HomePage() {
       )
       .then(() => {
         setUserData(updatedUserData);
-        toast.success('Added product to cart!');
+        toast.success("Added product to cart!");
         dispatch(fetchCart(userId));
       })
       .catch((error) => {
-        console.error('Error updating cart:', error);
-        toast.error('Failed to add product to cart');
+        console.error("Error updating cart:", error);
+        toast.error("Failed to add product to cart");
       });
   };
 
@@ -151,14 +143,21 @@ function HomePage() {
         </div>
         <div className="max-sm:px-8">
           <h1 className="mb-5 text-4xl font-bold"> New Collection </h1>
-
+          <p className="text-base font-medium mb-4 w-96">
+            Explore our latest collections featuring a diverse range of
+            furniture and clothing, showcasing the latest trends in style and
+            comfort.
+          </p>
           <button
             onClick={() => {
-              location.href = '#1';
+              if (myRef.current) {
+                myRef.current.scrollIntoView();
+              }
+              // location.href = "#1";
             }}
             className="btn bg-[#E47732] hover:bg-[#E97739] text-white"
           >
-            Shop now{' '}
+            Shop now{" "}
             <svg
               className="w-6 h-6 text-gray-800 dark:text-white"
               aria-hidden="true"
@@ -180,7 +179,7 @@ function HomePage() {
         </div>
       </div>
 
-      <div className="flex bg-white max-sm:flex-col p-5 justify-around">
+      <div className="flex my-9 py-10 bg-white max-sm:flex-col p-5 justify-around">
         <div className="m-5">
           <h1 className="text-2xl  border-b-2 pb-3 border-secondary">
             Shop by categories
@@ -189,7 +188,7 @@ function HomePage() {
 
           <span className="mt-4 text-lg">Explore our diverse collection</span>
           <p className="text-gray-400  text-lg ">
-            {' '}
+            {" "}
             +{product.length} Unique product
           </p>
         </div>
@@ -198,22 +197,26 @@ function HomePage() {
             <button
               key={e.id}
               onClick={() => {
-                location.href = '#1';
+                location.href = "#1";
                 handleCategories(e.id);
               }}
-              className="border hover:scale-105  bg-base-200 rounded-xl overflow-hidden"
+              className="  hover:scale-105 "
             >
-              <img className="w-60 max-sm:h-52 h-72" src={e.image} alt="" />
-              <h2 className="font-bold text-center">{e.name}</h2>
+              <img
+                className=" w-60 max-sm:h-52 h-72 border bg-base-200 rounded-t-xl overflow-hidden"
+                src={e.image}
+                alt=""
+              />
+              <h2 className="bg-gray-700 text-white rounded-b-xl">{e.name}</h2>
             </button>
           ))}
         </section>
       </div>
-      <div className="flex w-full flex-col bg-white py-10">
+      {/* <div className="flex w-full flex-col bg-[#E9EBF7]  py-10">
         <div id="1" className="divider"></div>
-      </div>
-
-      <div className="pb-4 bg-white">
+      </div> */}
+      <br />
+      <div className="pb-4 bg-[#E9EBF7] ">
         <div
           className="form-control 
          p-0    flex-row 
@@ -226,7 +229,7 @@ function HomePage() {
             input-bordered focus:outline-none  shadow-2xl max-md:w-[70%]"
             onChange={(e) => setsearchInput(e.target.value)}
             value={searchInput}
-            onKeyDown={(e) => (e.key === 'Enter' ? searchFilterData() : null)}
+            onKeyDown={(e) => (e.key === "Enter" ? searchFilterData() : null)}
           />
 
           <button
@@ -235,7 +238,7 @@ function HomePage() {
             }}
             className="w-10 bg-black rounded-r-lg"
           >
-            {' '}
+            {" "}
             <svg
               className=" m-auto
         text-slate-200 "
@@ -267,97 +270,123 @@ function HomePage() {
           )}
         </div>
       </div>
+      <div className="flex justify-center bg-[#E9EBF7] ">
+        {" "}
+        <div
+          ref={myRef}
+          className="grid grid-cols-4 max-sm:grid-cols-2 max-sm:w-full max-sm:gap-6 max-sm:mx-9  w-[70vw] gap-10 py-5"
+        >
+          {filteredData.length > 0 ? (
+            filteredData.slice(0, visibleCount).map((e) => {
+              return (
+                <div key={e.id}>
+                  <div className="max-w-xs  bg-white   rounded-lg shadow-xl overflow-hidden">
+                    <div className="relative">
+                      <Link to={`/details/${e.id}`}>
+                        <img
+                          className="w-72 h-64 p-2 max-sm:h-40 object-cover"
+                          src={e.images[0]}
+                          alt="Product Image"
+                        />
+                      </Link>
+                      <span
+                        style={{ display: e.discount == "" ? "none" : "" }}
+                        className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded"
+                      >
+                        {e.discount}
+                      </span>
+                    </div>
+                    <div className="p-4 flex flex-col">
+                      <div className="flex items-center">
+                        <div className="flex items-center text-sm text-gray-400">
+                          <svg
+                            className="w-4 h-4 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M12 .587l3.668 7.568L24 9.423l-6 5.854 1.41 8.219L12 18.832 4.59 23.496 6 15.277 0 9.423l8.332-1.268z" />
+                          </svg>
+                          <svg
+                            className="w-4 h-4 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M12 .587l3.668 7.568L24 9.423l-6 5.854 1.41 8.219L12 18.832 4.59 23.496 6 15.277 0 9.423l8.332-1.268z" />
+                          </svg>
+                          <svg
+                            className="w-4 h-4 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M12 .587l3.668 7.568L24 9.423l-6 5.854 1.41 8.219L12 18.832 4.59 23.496 6 15.277 0 9.423l8.332-1.268z" />
+                          </svg>
+                          <svg
+                            className="w-4 h-4 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M12 .587l3.668 7.568L24 9.423l-6 5.854 1.41 8.219L12 18.832 4.59 23.496 6 15.277 0 9.423l8.332-1.268z" />
+                          </svg>
+                          <svg
+                            className="w-4 h-4 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M12 .587l3.668 7.568L24 9.423l-6 5.854 1.41 8.219L12 18.832 4.59 23.496 6 15.277 0 9.423l8.332-1.268z" />
+                          </svg>
+                          <Link to={`/details/${e.id}`}>
+                            <span className="ml-2">(View Details)</span>
+                          </Link>
+                        </div>
+                      </div>
+                      <h2 className="mt-2 text-gray-800 text-lg font-semibold">
+                        {e.title}
+                      </h2>
+                      <div className="flex justify-between">
+                        {Number(e.discount.split("%")[0]) !== 0 ? (
+                          <span>
+                            <span className="mt-1 text-gray-500  opacity-80   relative font-bold">
+                              ${e.price}
+                              <hr
+                                className=" w-7 border-gray-500 border-[1px] absolute bottom-[.60rem]
+                          "
+                              />
+                            </span>
+                            <span className="mt-1 text-accent  font-bold">
+                              {" "}
+                              $
+                              {Number(e.price) -
+                                (Number(e.discount.split("%")[0]) / 100) *
+                                  Number(e.price)}
+                            </span>
+                          </span>
+                        ) : (
+                          <p className="mt-1 text-gray-600 font-bold">
+                            ${e.price}
+                          </p>
+                        )}
 
-      <div
-        // ref={divRef}
-
-        className="flex flex-wrap justify-center items-center bg-white gap-10 py-5"
-      >
-        {filteredData.length > 0 ? (
-          filteredData.slice(0, visibleCount).map((e) => {
-            return (
-              <div key={e.id}>
-                <div className="max-w-xs bg-white rounded-lg shadow-2xl overflow-hidden m-4">
-                  <div className="relative">
-                    <Link to={`/details/${e.id}`}>
-                      <img
-                        className="w-80 h-64 object-cover"
-                        src={e.images[0]}
-                        alt="Product Image"
-                      />
-                    </Link>
-                    <span
-                      style={{ display: e.discount == '' ? 'none' : '' }}
-                      className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded"
-                    >
-                      {e.discount}
-                    </span>
-                  </div>
-                  <div className="p-4 flex flex-col">
-                    <div className="flex items-center">
-                      <div className="flex items-center text-sm text-gray-400">
-                        <svg
-                          className="w-4 h-4 fill-current"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
+                        <button
+                          disabled={userId ? false : true}
+                          className="btn max-sm:w-20 bg-[#E47732] hover:bg-[#E97739] text-white w-max"
+                          onClick={() => handleAddToCart(e)}
                         >
-                          <path d="M12 .587l3.668 7.568L24 9.423l-6 5.854 1.41 8.219L12 18.832 4.59 23.496 6 15.277 0 9.423l8.332-1.268z" />
-                        </svg>
-                        <svg
-                          className="w-4 h-4 fill-current"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 .587l3.668 7.568L24 9.423l-6 5.854 1.41 8.219L12 18.832 4.59 23.496 6 15.277 0 9.423l8.332-1.268z" />
-                        </svg>
-                        <svg
-                          className="w-4 h-4 fill-current"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 .587l3.668 7.568L24 9.423l-6 5.854 1.41 8.219L12 18.832 4.59 23.496 6 15.277 0 9.423l8.332-1.268z" />
-                        </svg>
-                        <svg
-                          className="w-4 h-4 fill-current"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 .587l3.668 7.568L24 9.423l-6 5.854 1.41 8.219L12 18.832 4.59 23.496 6 15.277 0 9.423l8.332-1.268z" />
-                        </svg>
-                        <svg
-                          className="w-4 h-4 fill-current"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 .587l3.668 7.568L24 9.423l-6 5.854 1.41 8.219L12 18.832 4.59 23.496 6 15.277 0 9.423l8.332-1.268z" />
-                        </svg>
-                        <Link to={`/details/${e.id}`}>
-                          <span className="ml-2">(View Details)</span>
-                        </Link>
+                          Add to Cart
+                        </button>
                       </div>
                     </div>
-                    <h2 className="mt-2 text-gray-800 text-lg font-semibold">
-                      {e.title}
-                    </h2>
-                    <p className="mt-1 text-gray-600 font-bold">${e.price}</p>
-                    <button
-                      disabled={userId ? false : true}
-                      className="btn bg-[#E47732] hover:bg-[#E97739] text-white self-end"
-                      onClick={() => handleAddToCart(e)}
-                    >
-                      Add to Cart
-                    </button>
                   </div>
                 </div>
-              </div>
-            );
-          })
-        ) : (
-          <div>No results found</div>
-        )}
+              );
+            })
+          ) : (
+            <div>No results found</div>
+          )}
+        </div>
       </div>
+
       {visibleCount < filteredData.length && (
-        <div className="w-full  bg-white flex pb-5 justify-center">
+        <div className="w-full   bg-[#E9EBF7]  flex pb-5 justify-center">
           <button
             onClick={handleShowMore}
             className="mt-5 bg-primary text-white py-2 px-4 rounded"

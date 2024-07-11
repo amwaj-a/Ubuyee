@@ -129,6 +129,7 @@ function CartPage() {
                   id={item.id}
                   title={item.title}
                   price={item.price}
+                  discount={item.discount}
                   image={item.images[0]}
                   qty={item.qty}
                   onDelete={deleteProductCart}
@@ -208,14 +209,25 @@ function CartPage() {
               Total amount is $
               {userData &&
                 itemsData.reduce((total, item) => {
+                  let sale = 0;
                   const cartItem = userData.cart.find(
                     (cartItem) => cartItem.id === item.id
                   );
+
+                  if (Number(cartItem.discount.split("%")[0]) !== 0) {
+                    sale =
+                      item.price -
+                      (Number(cartItem.discount.split("%")[0]) / 100) *
+                        item.price;
+                  } else {
+                    sale = item.price;
+                  }
+
                   localStorage.setItem(
                     "totalAmount",
-                    total + item.price * cartItem.quantity
+                    total + sale * cartItem.quantity
                   );
-                  return total + item.price * cartItem.quantity;
+                  return total + sale * cartItem.quantity;
                 }, 0)}
             </strong>
           </div>

@@ -1,13 +1,13 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { CiLogout } from 'react-icons/ci';
-import { array } from 'yup';
-import Nav from '../componenet/Nav';
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { CiLogout } from "react-icons/ci";
+import { array } from "yup";
+import Nav from "../componenet/Nav";
 
 function OrderHistory() {
   const [prodect, setProdect] = useState([]);
-  const id = localStorage.getItem('userId');
+  const id = localStorage.getItem("userId");
   // const [isLoading, setIsLoding] = useState(false);
   const navigate = useNavigate();
 
@@ -16,31 +16,7 @@ function OrderHistory() {
       .get(`https://668a90262c68eaf3211d2977.mockapi.io/users/${id}`)
       .then(function (res) {
         let array = [];
-        // res.data.filter((item) => {
-        // if (user.purchasedHistory.find((e) => e.id == item.id)) {
-        // total=item.price
-        // console.log(response.data.purchasedHistory);
-        // response.data.purchasedHistory.filter((e) => {
-        // console.log(e.items.findIndex((i) => i.id == item.id));
-        // let index = e.items.findIndex((i) => i.id == item.id);
-        // if (index !== -1) {
-        // console.log(res.data.purchasedHistory);
 
-        // array.push({
-        //   date: e.date,
-        //   order: e.orderNumber,
-        //   total: item.price * e.items[index].quantity,
-        //   img: item.images,
-        //   title: item.title,
-        //   Qut: e.items[index].quantity,
-        // });
-
-        // array.push();
-        // console.log(e);
-        // }
-        // });
-        // });
-        // setIsLoding(true);
         setProdect(res.data.purchasedHistory);
       })
       .catch(function (error) {
@@ -65,13 +41,13 @@ function OrderHistory() {
               <div className="col-span-3 max-sm:w-full">
                 <nav className="flex flex-col max-sm:justify-between  max-sm:flex-row space-y-2">
                   <Link
-                    to={'/Profile'}
+                    to={"/Profile"}
                     className="p-2 rounded max-sm:mt-1 hover:bg-gray-200 "
                   >
                     My Profile
                   </Link>
                   <Link
-                    to={'/OrderHistory'}
+                    to={"/OrderHistory"}
                     href="#"
                     className="p-2 rounded font-semibold bg-blue-100 text-[#E47732]"
                   >
@@ -80,7 +56,7 @@ function OrderHistory() {
                   <Link
                     onClick={() => {
                       localStorage.clear();
-                      navigate('../');
+                      navigate("../");
                     }}
                     className="p-2 rounded hover:bg-gray-200 flex gap-2 items-center"
                   >
@@ -101,7 +77,7 @@ function OrderHistory() {
                     </>
                   ) : (
                     <div className="bg-white  rounded-lg shadow mb-6">
-                      <div className="flex flex-col justify-between items-center mb-4">
+                      <div className="flex flex-col-reverse justify-between items-center mb-4">
                         {/* {prodect[0].date} */}
                         {prodect.map((item, index) => (
                           <details key={index} className="collapse  ">
@@ -137,9 +113,12 @@ function OrderHistory() {
                             </summary>
                             <div className="collapse-content">
                               {/* {console.log(item.items)} */}
-                              <div>
-                                {item.items.map((e) => (
-                                  <div className="flex max-sm:mx-0 mx-10 justify-between border-b items-center">
+                              <div >
+                                {item.items.map((e, index) => (
+                                  <div
+                                    key={index}
+                                    className="flex max-sm:mx-0 mx-10 justify-between border-b items-center"
+                                  >
                                     <img
                                       className="w-20"
                                       src={e.images}
@@ -148,7 +127,36 @@ function OrderHistory() {
 
                                     <h1>{e.title}</h1>
                                     <span>Qut: {e.quantity}</span>
-                                    <span>${e.price * e.quantity}</span>
+
+                                    <span>
+                                      {" "}
+                                      {Number(e.discount.split("%")[0]) !==
+                                      0 ? (
+                                        <span>
+                                          <span className="mt-1 text-gray-500  opacity-80   relative font-bold">
+                                            ${e.price}
+                                            <hr
+                                              className=" w-7 border-gray-500 border-[1px] absolute bottom-[.60rem]
+                          "
+                                            />
+                                          </span>
+                                          <span className="mt-1 text-accent  font-bold">
+                                            {" "}
+                                            $
+                                            {Number(e.price) -
+                                              (Number(
+                                                e.discount.split("%")[0]
+                                              ) /
+                                                100) *
+                                                Number(e.price)}
+                                          </span>
+                                        </span>
+                                      ) : (
+                                        <p className="mt-1 text-gray-600 font-bold">
+                                          ${e.price}
+                                        </p>
+                                      )}
+                                    </span>
                                   </div>
                                 ))}
                               </div>

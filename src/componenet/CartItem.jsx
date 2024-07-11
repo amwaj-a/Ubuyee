@@ -9,6 +9,7 @@ function CartItem({
   onDelete,
   onQuantityChange,
   checkout,
+  discount
 }) {
   return (
     <div className="bg-white max-sm:w-[90vw] max-sm:mx-5 max-sm:p-0 h-max p-5 flex flex-col w-full border-b-[1px]">
@@ -37,8 +38,36 @@ function CartItem({
             )}
           </label>
         </div>
-
-        <strong>${qty * price}</strong>
+    
+        <strong>
+        {Number(discount.split("%")[0]) !== 0 ? (
+                          <span>
+                            <span className="mt-1 text-gray-500  opacity-80   relative font-bold">
+                              ${price}
+                              <hr
+                                className=" w-7 border-gray-500 border-[1px] absolute bottom-[.60rem]
+                          "
+                              />
+                            </span>
+                            <span className="mt-1 text-accent  font-bold">
+                              {" "}
+                              $
+                              {Number(price) -
+                                (Number(discount.split("%")[0]) / 100) *
+                                  Number(price)}
+                            </span>
+                          </span>
+                        ) : (
+                          <p className="mt-1 text-gray-600 font-bold">
+                            ${price}
+                          </p>
+                        )}
+          
+          {/* ${qty * price} */}
+          
+          
+          
+          </strong>
         {onDelete && (
           <button
             onClick={() => onDelete(id)}
